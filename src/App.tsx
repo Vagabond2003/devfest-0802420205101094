@@ -825,7 +825,8 @@ export default function App() {
                           )}
                           {f.detectedExpiry && (
                             <span className={`badge ${expired ? 'bad' : 'soft'}`}>
-                              ⏱ {T.foundInDoc} {formatDate(f.detectedExpiry, lang)}
+                              ⏱ {T.expiryInDoc} {formatDate(f.detectedExpiry, lang)}
+                              {expired ? ` (${T.beforeDeadline})` : ''}
                             </span>
                           )}
                         </div>
