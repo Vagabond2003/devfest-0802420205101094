@@ -702,7 +702,7 @@ export default function App() {
     () => {
       const mm = gsap.matchMedia()
       mm.add(MOTION_OK, () => {
-        gsap.from('.topbar, .stepper li, main > .card', {
+        gsap.from('.topbar, .side-card, .steps > .card', {
           autoAlpha: 0,
           y: 14,
           duration: 0.45,
@@ -795,15 +795,52 @@ export default function App() {
         )}
         {area('top')}
 
-        <ol className="stepper" aria-label={T.howItWorks}>
-          {T.steps.map((s, i) => (
-            <li key={i} className={stepDone[i] ? 'done' : ''}>
-              <span className="dot">{stepDone[i] ? '✓' : num(i + 1, lang)}</span>
-              <span>{s}</span>
-            </li>
-          ))}
-        </ol>
 
+
+        <div className="layout">
+          <aside className="side" aria-label={T.summary}>
+            <div className="side-card">
+              <div className="side-label">{T.progress}</div>
+              <ol className="stepper" aria-label={T.howItWorks}>
+                {T.steps.map((s, i) => (
+                  <li key={i} className={stepDone[i] ? 'done' : ''}>
+                    <a href={`#step${i + 1}`}>
+                      <span className="dot">{stepDone[i] ? '✓' : num(i + 1, lang)}</span>
+                      <span>{s}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+              {project && (
+                <div className="side-tender">
+                  <div className="side-label">{T.tenderId}</div>
+                  <div className="strong">{project.tender.tender_id}</div>
+                  <div className="side-label">{T.deadline}</div>
+                  <div>{formatDate(deadline, lang)}</div>
+                </div>
+              )}
+              {project && (
+                <ul className="side-counts" aria-live="polite">
+                  {(['ok', 'missing', 'expiry_needed', 'expired', 'not_provided'] as StatusCode[]).map((st) => (
+                    <li key={st} className={`sc st-${st}`}>
+                      <span className="sc-dot" aria-hidden />
+                      <span>{T.statuses[st]}</span>
+                      <b>{num(counts[st], lang)}</b>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <button className="btn primary block" onClick={generate} disabled={!project || blocking.length > 0 || busy !== null}>
+                {busy === 'build' ? T.generating : T.generate}
+              </button>
+              {project && blocking.length > 0 && (
+                <a className="side-link" href="#step4">
+                  {T.problemsLeft(blocking.length)}
+                </a>
+              )}
+            </div>
+          </aside>
+          <div className="steps">
         {/* ---------------- Step 1 ---------------- */}
         <section className="card" id="step1">
           <h2>
@@ -975,13 +1012,7 @@ export default function App() {
                   {T.exportCsv}
                 </button>
               </div>
-              <div className="counts" aria-live="polite">
-                {(['ok', 'missing', 'expiry_needed', 'expired', 'not_provided'] as StatusCode[]).map((s) => (
-                  <span key={s} className={`count st-${s}`}>
-                    {T.statuses[s]}: <b>{num(counts[s], lang)}</b>
-                  </span>
-                ))}
-              </div>
+
               <details className="ai">
                 <summary>{T.aiTitle}</summary>
                 <p className="help small">{T.aiHelp}</p>
@@ -1271,6 +1302,8 @@ export default function App() {
             </div>
           )}
         </section>
+          </div>
+        </div>
       </main>
 
       <footer className="foot muted small">{T.appTitle} · MIT License · pdf-lib · pdf.js</footer>

@@ -1722,3 +1722,231 @@ input[type='date'].bad {
     margin-right: 6px;
   }
 }
+
+/* ---------- v3: colour + sidebar layout (less clutter) ---------- */
+:root {
+  --bg: oklch(0.975 0.01 264);
+  --inset: oklch(0.97 0.012 264);
+  --line: oklch(0.91 0.012 264);
+  --line-strong: oklch(0.84 0.02 264);
+  --brand: oklch(0.5 0.19 264); /* indigo – white text about 6:1 */
+  --brand-2: oklch(0.43 0.19 264);
+  --brand-soft: oklch(0.95 0.03 264);
+  --muted: oklch(0.45 0.02 264);
+  --ink: oklch(0.2 0.02 264);
+}
+main {
+  max-width: 1280px;
+}
+/* Coloured header band */
+.topbar {
+  background: linear-gradient(115deg, oklch(0.32 0.12 264), oklch(0.45 0.17 270));
+  color: #fff;
+  border: 0;
+}
+.topbar .tagline {
+  color: oklch(0.9 0.03 264);
+}
+.topbar .logo {
+  background: #fff;
+  color: var(--brand);
+}
+.topbar .btn {
+  background: oklch(1 0 0 / 0.1);
+  border-color: oklch(1 0 0 / 0.35);
+  color: #fff;
+}
+.topbar .btn:hover:not(:disabled) {
+  background: oklch(1 0 0 / 0.2);
+}
+.topbar .btn.danger-ghost {
+  color: oklch(0.88 0.08 25);
+}
+.topbar .lang {
+  background: oklch(0 0 0 / 0.22);
+}
+.topbar .lang button {
+  color: #fff;
+}
+.topbar .lang button.on {
+  background: #fff;
+  color: var(--brand-2);
+}
+.privacy {
+  margin: 4px 0 14px;
+}
+/* Two columns: sticky sidebar + steps */
+.layout {
+  display: grid;
+  grid-template-columns: 272px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.side {
+  position: sticky;
+  top: 16px;
+}
+.side-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.side-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+.side .stepper {
+  grid-template-columns: 1fr;
+  gap: 4px;
+  margin: 0;
+}
+.side .stepper li {
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+.side .stepper li a {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: calc(var(--radius) - 2px);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.92rem;
+  transition-property: background-color;
+  transition-duration: 150ms;
+}
+.side .stepper li a:hover {
+  background: var(--brand-soft);
+}
+.side .stepper .dot {
+  background: var(--brand-soft);
+  color: var(--brand-2);
+}
+.side .stepper li.done a {
+  color: var(--ok);
+  font-weight: 600;
+}
+.side .stepper li.done .dot {
+  background: var(--ok);
+  color: #fff;
+}
+.side-tender {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  background: var(--brand-soft);
+  border-radius: calc(var(--radius) - 2px);
+}
+.side-tender .side-label:not(:first-child) {
+  margin-top: 6px;
+}
+.side-counts {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 4px;
+}
+.sc {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: calc(var(--radius) - 2px);
+  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+}
+.sc b {
+  margin-left: auto;
+}
+.sc-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.btn.block {
+  width: 100%;
+  justify-content: center;
+  padding: 11px 14px;
+}
+.side-link {
+  color: var(--bad);
+  font-size: 0.86rem;
+  text-align: center;
+}
+.steps > .card {
+  scroll-margin-top: 16px;
+}
+/* Step headers in colour */
+.card h2 .num {
+  background: var(--brand);
+}
+.card h2 {
+  font-size: 1.15rem;
+}
+/* File list as a two-column grid on wide screens */
+.files {
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+}
+.files li {
+  flex-wrap: wrap;
+}
+.factions {
+  margin-left: auto;
+}
+.drop:hover,
+.drop.over {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+}
+.btn:focus-visible,
+select:focus-visible,
+input:focus-visible,
+.drop:focus-visible,
+.side .stepper li a:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.btn.accent {
+  background: var(--brand-soft);
+  border-color: oklch(0.85 0.06 264);
+  color: var(--brand-2);
+}
+.check input,
+.radio input[type='radio'] {
+  accent-color: var(--brand);
+}
+.spinner {
+  border-top-color: var(--brand);
+}
+@media (max-width: 980px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .side {
+    position: static;
+  }
+  .side .stepper {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .side .stepper {
+    grid-template-columns: 1fr;
+  }
+  .files {
+    grid-template-columns: 1fr;
+  }
+}
