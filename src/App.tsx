@@ -759,10 +759,10 @@ export default function App() {
           </div>
           <div className="file-actions">
             <button className="btn small" onClick={saveProjectFile} disabled={!project && !files.length}>
-              💾 {T.saveProject}
+              {T.saveProject}
             </button>
             <label className="btn small">
-              📂 {T.openProject}
+              {T.openProject}
               <input
                 type="file"
                 hidden
@@ -775,7 +775,7 @@ export default function App() {
               />
             </label>
             <button className="btn small danger-ghost" onClick={startOver} disabled={!project && !files.length}>
-              ↺ {T.startOver}
+              {T.startOver}
             </button>
           </div>
         </div>
@@ -783,7 +783,7 @@ export default function App() {
 
       <main>
         <div className="privacy">
-          🔒 {T.privacy} {savedTick && <span className="saved">✓ {T.autosaved}</span>}
+          {T.privacy} {savedTick && <span className="saved">✓ {T.autosaved}</span>}
         </div>
         {restoredAt && (
           <div className="msg info">
@@ -856,7 +856,7 @@ export default function App() {
                       {title(r, lang)} <span className="muted small">· {lang === 'bn' ? r.title_en : r.title_bn}</span>
                     </span>
                     <span className={`tag ${r.mandatory ? 'tag-m' : 'tag-o'}`}>{r.mandatory ? T.mandatory : T.optional}</span>
-                    {r.has_expiry && <span className="tag tag-e">⏱ {T.hasExpiry}</span>}
+                    {r.has_expiry && <span className="tag tag-e">{T.hasExpiry}</span>}
                   </li>
                 ))}
               </ol>
@@ -918,7 +918,7 @@ export default function App() {
                           <span className="muted small">{formatBytes(f.size, lang)}</span>
                           {dups && (
                             <span className="badge warn">
-                              ⚠ {T.duplicateOf} {dups.map((d) => `“${d.name}”`).join(', ')}
+                              {T.duplicateOf} {dups.map((d) => `“${d.name}”`).join(', ')}
                             </span>
                           )}
                           {f.mode === 'raster' && <span className="badge info">{T.rasterNote}</span>}
@@ -931,7 +931,7 @@ export default function App() {
                           )}
                           {f.detectedExpiry && (
                             <span className={`badge ${expired ? 'bad' : 'soft'}`}>
-                              ⏱ {T.expiryInDoc} {formatDate(f.detectedExpiry, lang)}
+                              {T.expiryInDoc} {formatDate(f.detectedExpiry, lang)}
                               {expired ? ` (${T.beforeDeadline})` : ''}
                             </span>
                           )}
@@ -939,7 +939,7 @@ export default function App() {
                       </div>
                       <div className="factions">
                         <button className="btn small" onClick={() => setPreview(f)}>
-                          👁 {T.preview}
+                          {T.preview}
                         </button>
                         <button className="btn small danger-ghost" onClick={() => removeFile(f.id)} aria-label={`${T.remove} ${f.name}`}>
                           {T.remove}
@@ -969,10 +969,10 @@ export default function App() {
               <p className="help">{T.step3Help}</p>
               <div className="toolbar">
                 <button className="btn accent" onClick={autoMatch} disabled={!files.length} title={T.autoMatchHelp}>
-                  ✨ {T.autoMatch}
+                  {T.autoMatch}
                 </button>
                 <button className="btn" onClick={exportCsv}>
-                  ⬇ {T.exportCsv}
+                  {T.exportCsv}
                 </button>
               </div>
               <div className="counts" aria-live="polite">
@@ -983,7 +983,7 @@ export default function App() {
                 ))}
               </div>
               <details className="ai">
-                <summary>🤖 {T.aiTitle}</summary>
+                <summary>{T.aiTitle}</summary>
                 <p className="help small">{T.aiHelp}</p>
                 <div className="ai-row">
                   <label>
@@ -1003,7 +1003,7 @@ export default function App() {
                         <span className="spinner" /> {T.aiRunning}
                       </>
                     ) : (
-                      <>🤖 {T.aiRun}</>
+                      <>{T.aiRun}</>
                     )}
                   </button>
                 </div>
@@ -1034,7 +1034,7 @@ export default function App() {
                             <div className="dmeta">
                               <span className="muted small">{req.id}</span>
                               <span className={`tag ${req.mandatory ? 'tag-m' : 'tag-o'}`}>{req.mandatory ? T.mandatory : T.optional}</span>
-                              {req.has_expiry && <span className="tag tag-e">⏱ {T.hasExpiry}</span>}
+                              {req.has_expiry && <span className="tag tag-e">{T.hasExpiry}</span>}
                             </div>
                           </td>
                           <td data-label={T.colFile}>
@@ -1060,7 +1060,7 @@ export default function App() {
                               {file && (
                                 <span className="pick-actions">
                                   <button className="btn small" onClick={() => setPreview(file)}>
-                                    👁 {T.preview}
+                                    {T.preview}
                                   </button>
                                   <button className="btn small ghost" onClick={() => assign(req.key, '')}>
                                     ✕ {T.unmatch}
@@ -1070,7 +1070,7 @@ export default function App() {
                             </div>
                             {file && suggested.includes(req.key) && (
                               <span className="badge soft" title={aiReasons[req.key]}>
-                                ✨ {T.suggested}
+                                {T.suggested}
                                 {aiReasons[req.key] ? ` · ${aiReasons[req.key]}` : ''}
                               </span>
                             )}
@@ -1136,7 +1136,7 @@ export default function App() {
           </label>
 
           <details className="seal" open={seal.enabled || undefined}>
-            <summary>🖋 {T.sealTitle}</summary>
+            <summary>{T.sealTitle}</summary>
             <p className="help">{T.sealHelp}</p>
             {area('build')}
             <div className="seal-grid">
@@ -1203,7 +1203,7 @@ export default function App() {
             </div>
           ) : blocking.length ? (
             <div className="blockers" role="status" aria-live="polite">
-              <strong>⛔ {T.cannotGenerate}</strong>
+              <strong>{T.cannotGenerate}</strong>
               <ul>
                 {blocking.map((r) => (
                   <li key={r.req.key}>
@@ -1215,7 +1215,7 @@ export default function App() {
           ) : (
             <div className="msg success">
               <span>
-                ✅ {T.ready} {T.willContain(plan.total, included.length, includeIndex)}
+                {T.ready} {T.willContain(plan.total, included.length, includeIndex)}
               </span>
             </div>
           )}
@@ -1232,7 +1232,7 @@ export default function App() {
                   <span className="spinner light" /> {T.generating}
                 </>
               ) : (
-                <>📄 {T.generate}</>
+                <>{T.generate}</>
               )}
             </button>
             {busy === 'build' && <span className="muted small">{progress}</span>}
@@ -1253,14 +1253,14 @@ export default function App() {
             <div className="result">
               <div className="result-head">
                 <div>
-                  <h3>✅ {T.done}</h3>
+                  <h3>{T.done}</h3>
                   <p className="muted">
                     {result.name} · {T.totalPages}: {num(result.total, lang)}
                   </p>
                 </div>
                 <div className="row-actions">
                   <a className="btn primary big" href={result.url} download={result.name}>
-                    ⬇ {T.download} {result.name}
+                    {T.download} {result.name}
                   </a>
                   <a className="btn" href={result.url} target="_blank" rel="noreferrer">
                     {T.openPreview}
