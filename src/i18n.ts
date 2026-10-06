@@ -112,7 +112,8 @@ const en = {
   cannotGenerate: 'The package cannot be made yet. Please fix these problems:',
   needJson: 'Open the requirements.json file first (step 1).',
   ready: 'Everything is ready. You can make the package now.',
-  willContain: (pages: number, docs: number) => `The package will have ${pages} pages: cover${''} + ${docs} documents.`,
+  willContain: (pages: number, docs: number, index: boolean) =>
+    `The package will have ${pages} pages: cover${index ? ' + index' : ''} + ${docs} ${docs === 1 ? 'document' : 'documents'}.`,
   done: 'Package ready!',
   download: 'Download',
   openPreview: 'Open in a new tab',
@@ -279,7 +280,8 @@ const bn: Dict = {
   cannotGenerate: 'এখনও প্যাকেজ তৈরি করা যাবে না। অনুগ্রহ করে এই সমস্যাগুলো ঠিক করুন:',
   needJson: 'প্রথমে requirements.json ফাইলটি খুলুন (ধাপ ১)।',
   ready: 'সব প্রস্তুত। এখন প্যাকেজ তৈরি করতে পারেন।',
-  willContain: (pages: number, docs: number) => `প্যাকেজে মোট ${d(pages)} পৃষ্ঠা থাকবে: কভার + ${d(docs)}টি নথি।`,
+  willContain: (pages: number, docs: number, index: boolean) =>
+    `প্যাকেজে মোট ${d(pages)} পৃষ্ঠা থাকবে: কভার${index ? ' + সূচিপত্র' : ''} + ${d(docs)}টি নথি।`,
   done: 'প্যাকেজ প্রস্তুত!',
   download: 'ডাউনলোড',
   openPreview: 'নতুন ট্যাবে খুলুন',

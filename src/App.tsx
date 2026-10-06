@@ -1078,7 +1078,7 @@ export default function App() {
           ) : (
             <div className="msg success">
               <span>
-                ✅ {T.ready} {T.willContain(plan.total, included.length)}
+                ✅ {T.ready} {T.willContain(plan.total, included.length, includeIndex)}
               </span>
             </div>
           )}
