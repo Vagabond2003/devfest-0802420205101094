@@ -29,8 +29,9 @@ npm run build      # production build → dist/
 npm run preview    # serve the production build
 ```
 
-Deployment: every push to `main` is built and published to GitHub Pages by
-[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), so the live site always matches the latest commit.
+Deployment: every push to `main` is built by [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) and the
+`dist/` output is published to the `gh-pages` branch, which GitHub Pages serves – so the live site always matches the
+latest commit on `main`.
 
 ### Using the app (4 steps, Bangla or English)
 
@@ -87,6 +88,12 @@ Deployment: every push to `main` is built and published to GitHub Pages by
   and a file whose expiry date is still valid. Suggestions are marked “Suggested” for the user to check.
 * **Expiry date hints** – the app reads the PDF text and shows “Expiry date in document: …” (e.g. *VALID UNTIL 30 June
   2027*) with a one-click *Use this date*. The user stays in control; nothing is filled in silently.
+* **AI help with your own API key** (Rulebook 5.5) – optional panel in step 3. The user pastes their own Anthropic API
+  key (kept only in page memory, never saved, never in the code or repository). Claude (`claude-opus-5-5`, structured
+  JSON output) suggests matches and expiry dates for the documents that are still empty – it also reads a small image
+  of the first page of **scanned** files, so it can recognise `scan_0042.pdf` as the Signed Declaration. Suggestions go
+  through the same matching rules and are marked “Suggested” with a short reason. The app shows exactly what is sent.
+  All main features work without AI. (Server-side refusal fallback `fallbacks: "default"` is enabled.)
 * **Bad files handled safely** – damaged PDFs, PDFs with no pages and password-protected PDFs get a clear message instead
   of a crash. PDFs that open without a password but are protected against editing are accepted and added as page images.
 
@@ -110,13 +117,16 @@ Final package for the sample pack: 17 pages = cover + index + 15 document pages.
 * Fillable PDF form fields are kept as they look, but they are no longer editable form fields in the package.
 * Pages become 30 pt taller because of the footer strip (needed so the footer never covers content).
 * The date picker shows dates in the format of the computer's language settings.
-* Expiry hints and auto-match are suggestions; scanned documents without text give no hints.
+* Expiry hints and auto-match are suggestions; scanned documents without text give no hints (except with AI help).
+* AI help needs internet and the user's own Anthropic API key; it was tested for request/error handling only, since no
+  key is stored anywhere in this project.
 
 ## Tech
 
 React + TypeScript + Vite · [pdf-lib](https://pdf-lib.js.org/) (merge, cover, footer, seal) ·
 [pdf.js](https://mozilla.github.io/pdf.js/) (page count, text, previews) · idb-keyval (IndexedDB) ·
-Noto Sans Bengali via @fontsource (OFL). No backend, no database, no online storage, no API keys.
+Noto Sans Bengali via @fontsource (OFL) · `@anthropic-ai/sdk` + zod (optional AI help, loaded only when used).
+No backend, no database, no online storage, no API keys in the code.
 
 ## AI tools used
 

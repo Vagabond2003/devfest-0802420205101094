@@ -146,3 +146,23 @@ export async function rasterizePdf(bytes: Uint8Array, scale = 2): Promise<{ jpg:
   }
   return out
 }
+
+/** Small JPEG (base64, no data: prefix) of page 1 – used only for the optional AI help on scanned files. */
+export async function firstPageJpegBase64(bytes: Uint8Array, width = 900): Promise<string> {
+  const opened = await openWithPdfJs(bytes)
+  try {
+    const page = await opened.doc.getPage(1)
+    const base = page.getViewport({ scale: 1 })
+    const vp = page.getViewport({ scale: width / base.width })
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.ceil(vp.width)
+    canvas.height = Math.ceil(vp.height)
+    const ctx = canvas.getContext('2d')!
+    ctx.fillStyle = '#fff'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    await page.render({ canvasContext: ctx, viewport: vp, canvas }).promise
+    return canvas.toDataURL('image/jpeg', 0.8).split(',')[1]
+  } finally {
+    opened.destroy()
+  }
+}

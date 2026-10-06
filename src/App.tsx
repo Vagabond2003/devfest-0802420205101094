@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { STRINGS, type Strings } from './i18n'
 import type { Lang, Requirement, SealSettings, StatusCode, TenderProject, UploadedFile } from './types'
 import { BLOCKING, RequirementsError, parseRequirements, statusOf } from './lib/tender'
-import { inspectPdf, openWithPdfJs, renderPageToCanvas } from './lib/pdf'
+import { firstPageJpegBase64, inspectPdf, openWithPdfJs, renderPageToCanvas } from './lib/pdf'
 import { detectExpiry, suggestMatches } from './lib/match'
 import { buildPackage, planPackage } from './lib/build'
 import { clearLocal, exportProjectFile, importProjectFile, isProjectFileJson, loadLocal, saveLocal, type SavedState } from './lib/storage'
@@ -44,7 +44,13 @@ const STATUS_ICON: Record<StatusCode, string> = {
 
 function msgText(T: Strings, m: Msg): string {
   const v = T[m.key] as unknown
-  return typeof v === 'function' ? (v as (...a: (string | number)[]) => string)(...m.args) : String(v)
+  if (typeof v === 'function') return (v as (...a: (string | number)[]) => string)(...m.args)
+  if (v && typeof v === 'object') {
+    const map = v as Record<string, string>
+    const base = map[String(m.args[0])] ?? map.other ?? ''
+    return m.args[1] ? `${base} (${m.args[1]})` : base
+  }
+  return String(v)
 }
 
 function title(req: Requirement, lang: Lang) {
@@ -212,6 +218,10 @@ export default function App() {
   const [result, setResult] = useState<{ url: string; name: string; total: number; sig: object } | null>(null)
 
   const closePreview = useCallback(() => setPreview(null), [])
+  // Optional AI help – the key lives only in memory, never saved or sent anywhere except Anthropic.
+  const [aiKey, setAiKey] = useState('')
+  const [aiBusy, setAiBusy] = useState(false)
+  const [aiReasons, setAiReasons] = useState<Record<string, string>>({})
   const filesRef = useRef(files)
   useEffect(() => {
     filesRef.current = files
@@ -511,6 +521,58 @@ export default function App() {
       setSuggested((s) => [...new Set([...s, ...sug.map((x) => x.reqKey)])])
     }
     say('match', sug.length ? 'success' : 'info', 'autoMatched', sug.length)
+  }
+
+  const runAi = async () => {
+    if (!project || !aiKey.trim()) return
+    clearArea('match')
+    const usedFiles = new Set(usedBy.keys())
+    const usedHashes = new Set(files.filter((f) => usedFiles.has(f.id)).map((f) => f.hash))
+    const freeReqs = project.requirements.filter((r) => !fileById.has(matches[r.key]))
+    const freeFiles = files.filter((f) => !usedFiles.has(f.id) && !usedHashes.has(f.hash))
+    if (!freeReqs.length || !freeFiles.length) {
+      say('match', 'info', 'aiNothingToDo')
+      return
+    }
+    setAiBusy(true)
+    try {
+      const { aiSuggest } = await import('./lib/ai')
+      const images = new Map<string, string>()
+      for (const f of freeFiles.filter((x) => x.text.trim().length < 40).slice(0, 8)) {
+        try {
+          images.set(f.id, await firstPageJpegBase64(f.bytes))
+        } catch {
+          /* skip files that cannot be rendered */
+        }
+      }
+      const duplicateOf = new Map(freeFiles.map((f) => [f.id, (dupOf.get(f.id) ?? []).map((g) => g.id)]))
+      const sug = await aiSuggest({ apiKey: aiKey, deadline, requirements: freeReqs, files: freeFiles, duplicateOf, images })
+      // Apply only what respects the matching rules (one file per document, one copy per duplicate group).
+      const takenReq = new Set<string>()
+      const takenFile = new Set<string>()
+      const takenHash = new Set(usedHashes)
+      const applied = sug.filter((x) => {
+        const f = fileById.get(x.fileId)
+        if (!f || takenReq.has(x.reqKey) || takenFile.has(f.id) || takenHash.has(f.hash)) return false
+        takenReq.add(x.reqKey)
+        takenFile.add(f.id)
+        takenHash.add(f.hash)
+        return true
+      })
+      if (applied.length) {
+        setMatches((m) => ({ ...m, ...Object.fromEntries(applied.map((x) => [x.reqKey, x.fileId])) }))
+        setSuggested((s) => [...new Set([...s, ...applied.map((x) => x.reqKey)])])
+        setAiReasons((r) => ({ ...r, ...Object.fromEntries(applied.map((x) => [x.reqKey, x.reason])) }))
+        const dated = new Map(applied.filter((x) => x.expiry).map((x) => [x.fileId, x.expiry!]))
+        if (dated.size) setFiles((prev) => prev.map((f) => (dated.has(f.id) && !f.detectedExpiry ? { ...f, detectedExpiry: dated.get(f.id) } : f)))
+      }
+      say('match', applied.length ? 'success' : 'info', 'aiDone', applied.length)
+    } catch (e) {
+      const err = e as { code?: string; message?: string }
+      say('match', 'error', 'aiErr', err.code ?? 'other', err.code === 'other' ? (err.message ?? '') : '')
+    } finally {
+      setAiBusy(false)
+    }
   }
 
   const startOver = async () => {
@@ -876,6 +938,32 @@ export default function App() {
                   </span>
                 ))}
               </div>
+              <details className="ai">
+                <summary>🤖 {T.aiTitle}</summary>
+                <p className="help small">{T.aiHelp}</p>
+                <div className="ai-row">
+                  <label>
+                    {T.aiKey}{' '}
+                    <input
+                      type="password"
+                      autoComplete="off"
+                      spellCheck={false}
+                      value={aiKey}
+                      placeholder={T.aiKeyPh}
+                      onChange={(e) => setAiKey(e.target.value)}
+                    />
+                  </label>
+                  <button className="btn accent" onClick={runAi} disabled={!aiKey.trim() || aiBusy || !files.length}>
+                    {aiBusy ? (
+                      <>
+                        <span className="spinner" /> {T.aiRunning}
+                      </>
+                    ) : (
+                      <>🤖 {T.aiRun}</>
+                    )}
+                  </button>
+                </div>
+              </details>
               {!files.length && <p className="muted small">{T.addFilesFirst}</p>}
               {area('match')}
               <div className="table-wrap">
@@ -936,7 +1024,12 @@ export default function App() {
                                 </span>
                               )}
                             </div>
-                            {file && suggested.includes(req.key) && <span className="badge soft">✨ {T.suggested}</span>}
+                            {file && suggested.includes(req.key) && (
+                              <span className="badge soft" title={aiReasons[req.key]}>
+                                ✨ {T.suggested}
+                                {aiReasons[req.key] ? ` · ${aiReasons[req.key]}` : ''}
+                              </span>
+                            )}
                           </td>
                           <td data-label={T.colExpiry}>
                             {!req.has_expiry ? (

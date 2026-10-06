@@ -103,6 +103,24 @@ const en = {
   addFilesFirst: 'Add PDF files in step 2 to match them here.',
   exportCsv: 'Export checklist (CSV)',
 
+  // AI help
+  aiTitle: 'AI help (optional – uses your own Anthropic API key)',
+  aiHelp:
+    'AI can suggest matches and expiry dates, even for scanned files. Your key stays only in this page and is not saved. File names, a short text extract of each file and a small picture of the first page of scanned files are sent to Anthropic. Everything else in the app works without AI.',
+  aiKey: 'Anthropic API key',
+  aiKeyPh: 'sk-ant-…',
+  aiRun: 'Ask AI to suggest matches',
+  aiRunning: 'AI is checking the files…',
+  aiDone: (n: number) => (n === 0 ? 'AI did not find any new matches.' : `AI suggested ${n} matches. Please check them.`),
+  aiErr: {
+    auth: 'The API key is not valid. Please check it.',
+    rate: 'Too many requests – please wait a minute and try again.',
+    network: 'Could not reach the AI service. Check the internet connection.',
+    refusal: 'The AI declined this request.',
+    other: 'AI help failed.',
+  } as Record<string, string>,
+  aiNothingToDo: 'Every document already has a file, or there are no free files.',
+
   // Step 4
   step4Title: 'Make the package',
   step4Help: 'The package has a cover page, the documents in the required order and a page number on every page.',
@@ -271,6 +289,23 @@ const bn: Dict = {
   clearOptionalHint: 'এই নথিটি ঐচ্ছিক। বাদ দিতে ফাইলটি মুছে দিন।',
   addFilesFirst: 'এখানে মেলাতে ধাপ ২-এ PDF ফাইল যোগ করুন।',
   exportCsv: 'চেকলিস্ট রপ্তানি (CSV)',
+
+  aiTitle: 'এআই সহায়তা (ঐচ্ছিক – আপনার নিজের Anthropic API key লাগবে)',
+  aiHelp:
+    'এআই ফাইল মেলানো ও মেয়াদের তারিখ প্রস্তাব করতে পারে, স্ক্যান করা ফাইলের জন্যও। আপনার key শুধু এই পেজেই থাকে, সংরক্ষণ করা হয় না। ফাইলের নাম, প্রতিটি ফাইলের ছোট লেখা-অংশ এবং স্ক্যান করা ফাইলের প্রথম পৃষ্ঠার ছোট ছবি Anthropic-এ পাঠানো হয়। এআই ছাড়াও অ্যাপের সব কাজ করা যায়।',
+  aiKey: 'Anthropic API key',
+  aiKeyPh: 'sk-ant-…',
+  aiRun: 'এআই দিয়ে মিল প্রস্তাব করুন',
+  aiRunning: 'এআই ফাইলগুলো দেখছে…',
+  aiDone: (n: number) => (n === 0 ? 'এআই নতুন কোনো মিল পায়নি।' : `এআই ${d(n)}টি মিল প্রস্তাব করেছে। অনুগ্রহ করে যাচাই করুন।`),
+  aiErr: {
+    auth: 'API key সঠিক নয়। অনুগ্রহ করে যাচাই করুন।',
+    rate: 'অনেক বেশি অনুরোধ – এক মিনিট অপেক্ষা করে আবার চেষ্টা করুন।',
+    network: 'এআই সেবায় পৌঁছানো যায়নি। ইন্টারনেট সংযোগ দেখুন।',
+    refusal: 'এআই এই অনুরোধটি গ্রহণ করেনি।',
+    other: 'এআই সহায়তা ব্যর্থ হয়েছে।',
+  },
+  aiNothingToDo: 'সব নথির জন্য ফাইল দেওয়া আছে, অথবা খালি কোনো ফাইল নেই।',
 
   step4Title: 'প্যাকেজ তৈরি করুন',
   step4Help: 'প্যাকেজে থাকবে একটি কভার পৃষ্ঠা, নির্ধারিত ক্রমে নথিগুলো এবং প্রতিটি পৃষ্ঠায় পৃষ্ঠা নম্বর।',
