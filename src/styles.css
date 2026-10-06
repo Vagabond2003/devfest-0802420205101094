@@ -1090,8 +1090,7 @@ input[type='date'] {
   }
 }
 .msg,
-.blockers,
-.result {
+.blockers {
   animation: rise-in 220ms var(--ease-out);
 }
 .modal-back {

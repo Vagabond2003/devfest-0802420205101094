@@ -12,6 +12,8 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.131.0",
     "@fontsource/noto-sans-bengali": "^5.3.0",
+    "@gsap/react": "^2.1.2",
+    "gsap": "^3.15.0",
     "idb-keyval": "^6.3.0",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^6.4.299",

@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
 import { STRINGS, type Strings } from './i18n'
 import type { Lang, Requirement, SealSettings, StatusCode, TenderProject, UploadedFile } from './types'
 import { BLOCKING, RequirementsError, parseRequirements, statusOf } from './lib/tender'
@@ -10,6 +12,10 @@ import {
   csvCell, downloadBlob, formatBytes, formatDate, isIsoDate, looksLikePdf, looksLikePng, num, readFileBytes,
   safeFileName, sha256Hex, todayIso, uid,
 } from './lib/util'
+
+gsap.registerPlugin(useGSAP)
+
+const MOTION_OK = '(prefers-reduced-motion: no-preference)'
 
 const MAX_FILES = 30
 const MAX_MB = 50
@@ -218,6 +224,7 @@ export default function App() {
   const [result, setResult] = useState<{ url: string; name: string; total: number; sig: object } | null>(null)
 
   const closePreview = useCallback(() => setPreview(null), [])
+  const appRef = useRef<HTMLDivElement>(null)
   // Optional AI help – the key lives only in memory, never saved or sent anywhere except Anthropic.
   const [aiKey, setAiKey] = useState('')
   const [aiBusy, setAiBusy] = useState(false)
@@ -689,11 +696,48 @@ export default function App() {
       ))
 
   const showResult = result && result.sig === sig
+
+  // GSAP: one staggered entrance when the app opens (skipped for reduced-motion users).
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia()
+      mm.add(MOTION_OK, () => {
+        gsap.from('.topbar, .stepper li, main > .card', {
+          autoAlpha: 0,
+          y: 14,
+          duration: 0.45,
+          ease: 'power2.out',
+          stagger: 0.06,
+          clearProps: 'opacity,visibility,transform',
+        })
+      })
+      return () => mm.revert()
+    },
+    { scope: appRef },
+  )
+
+  // GSAP: reveal the finished package and draw the eye to the Download button.
+  useGSAP(
+    () => {
+      const panel = appRef.current?.querySelector('.result')
+      if (!result || !panel) return
+      const mm = gsap.matchMedia()
+      mm.add(MOTION_OK, () => {
+        gsap
+          .timeline()
+          .from(panel, { autoAlpha: 0, y: 16, duration: 0.4, ease: 'power3.out' })
+          .from(panel.querySelector('.btn.primary'), { scale: 0.96, duration: 0.45, ease: 'back.out(3)' }, '-=0.15')
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+      })
+      return () => mm.revert()
+    },
+    { scope: appRef, dependencies: [result?.url] },
+  )
   const stepDone = [!!project, files.length > 0, !!project && files.length > 0 && blocking.length === 0, !!showResult]
 
   // -------------------------------------------------------------------------
   return (
-    <div className="app">
+    <div className="app" ref={appRef}>
       <header className="topbar">
         <div className="brand">
           <div className="logo" aria-hidden>

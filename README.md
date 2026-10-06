@@ -94,6 +94,9 @@ latest commit on `main`.
   of the first page of **scanned** files, so it can recognise `scan_0042.pdf` as the Signed Declaration. Suggestions go
   through the same matching rules and are marked “Suggested” with a short reason. The app shows exactly what is sent.
   All main features work without AI. (Server-side refusal fallback `fallbacks: "default"` is enabled.)
+* **Polished motion** – GSAP (`useGSAP`, scoped, auto-cleanup) for a one-time staggered entrance and the reveal of
+  the finished package; CSS press feedback, tabular numbers and balanced text from the *make-interfaces-feel-better*
+  guidelines. All motion is switched off for users who prefer reduced motion.
 * **Bad files handled safely** – damaged PDFs, PDFs with no pages and password-protected PDFs get a clear message instead
   of a crash. PDFs that open without a password but are protected against editing are accepted and added as page images.
 
@@ -125,7 +128,7 @@ Final package for the sample pack: 17 pages = cover + index + 15 document pages.
 
 React + TypeScript + Vite · [pdf-lib](https://pdf-lib.js.org/) (merge, cover, footer, seal) ·
 [pdf.js](https://mozilla.github.io/pdf.js/) (page count, text, previews) · idb-keyval (IndexedDB) ·
-Noto Sans Bengali via @fontsource (OFL) · `@anthropic-ai/sdk` + zod (optional AI help, loaded only when used).
+Noto Sans Bengali via @fontsource (OFL) · GSAP + @gsap/react (motion) · `@anthropic-ai/sdk` + zod (optional AI help, loaded only when used).
 No backend, no database, no online storage, no API keys in the code.
 
 ## AI tools used
