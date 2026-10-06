@@ -1002,3 +1002,112 @@ fieldset:disabled {
   white-space: normal;
   margin-top: 4px;
 }
+
+/* ---------- polish pass (make-interfaces-feel-better principles) ---------- */
+:root {
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+}
+h1,
+h2,
+h3,
+.dtitle {
+  text-wrap: balance;
+}
+p,
+.help,
+.msg span,
+.blockers li span,
+.st-help {
+  text-wrap: pretty;
+}
+/* Numbers that change while you work should not shift the layout. */
+.counts,
+.count b,
+.pill,
+.ord,
+.num,
+.dot,
+.fmeta,
+.result p,
+.muted.small {
+  font-variant-numeric: tabular-nums;
+}
+/* Elevation with layered shadows; borders stay only where they mean structure or state. */
+.card {
+  border-color: transparent;
+  box-shadow:
+    0 0 0 1px rgba(16, 24, 40, 0.06),
+    0 1px 2px rgba(16, 24, 40, 0.05),
+    0 4px 12px rgba(16, 24, 40, 0.03);
+}
+/* Tactile press feedback, interruptible CSS transitions with explicit properties. */
+.btn,
+.lang button {
+  transition-property: background-color, border-color, color, scale;
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease-out);
+}
+.btn:active:not(:disabled),
+.lang button:active {
+  scale: 0.96;
+}
+.status,
+.count,
+select,
+input[type='date'] {
+  transition-property: background-color, border-color, color;
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease-out);
+}
+/* Subtle outline so images and page previews keep a consistent edge. */
+.seal-img img,
+.modal-body canvas {
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+}
+/* Small close buttons get a 40×40 hit area without changing their look. */
+.x {
+  position: relative;
+}
+.x::after {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 40px;
+  height: 40px;
+  translate: -50% -50%;
+}
+/* Gentle entrances for things that appear after an action (not on every keystroke). */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+.msg,
+.blockers,
+.result {
+  animation: rise-in 220ms var(--ease-out);
+}
+.modal-back {
+  animation: fade-in 180ms var(--ease-out);
+}
+.modal {
+  animation: rise-in 220ms var(--ease-out);
+}
+.files li {
+  animation: fade-in 200ms var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0ms !important;
+  }
+}
