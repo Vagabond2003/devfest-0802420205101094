@@ -781,7 +781,7 @@ export default function App() {
         </div>
       </header>
 
-      <main>
+      <main className="main">
         <div className="privacy">
           {T.privacy} {savedTick && <span className="saved">✓ {T.autosaved}</span>}
         </div>
@@ -798,13 +798,17 @@ export default function App() {
 
 
         <div className="layout">
-          <aside className="side" aria-label={T.summary}>
+          <aside className="side sidebar" aria-label={T.summary}>
             <div className="side-card">
-              <div className="side-label">{T.progress}</div>
+              <div className="sidebar-logo">{T.appTitle}</div>
+              <div className="sidebar-section">{T.progress}</div>
               <ol className="stepper" aria-label={T.howItWorks}>
                 {T.steps.map((s, i) => (
                   <li key={i} className={stepDone[i] ? 'done' : ''}>
-                    <a href={`#step${i + 1}`}>
+                    <a
+                href={`#step${i + 1}`}
+                className={`sidebar-item${!stepDone[i] && stepDone.slice(0, i).every(Boolean) ? ' active' : ''}`}
+              >
                       <span className="dot">{stepDone[i] ? '✓' : num(i + 1, lang)}</span>
                       <span>{s}</span>
                     </a>
@@ -817,6 +821,14 @@ export default function App() {
                   <div className="strong">{project.tender.tender_id}</div>
                   <div className="side-label">{T.deadline}</div>
                   <div>{formatDate(deadline, lang)}</div>
+                </div>
+              )}
+              {project && (
+                <div className="side-progress">
+                  <div className="sidebar-section">{T.summary}</div>
+                  <div className="progress" aria-hidden>
+                    <div className="progress-bar" style={{ width: `${rows.length ? Math.round(((counts.ok + counts.not_provided) / rows.length) * 100) : 0}%` }} />
+                  </div>
                 </div>
               )}
               {project && (
