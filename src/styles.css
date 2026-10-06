@@ -1319,3 +1319,300 @@ input[type='date'].good {
   border-color: var(--accent);
   background: #f9faf7;
 }
+
+/* ---------- theme v2: monochrome (Geist), AA contrast, clear surface hierarchy ----------
+   Level 0 page: --bg (0.985)  ·  Level 1 cards: white + border + shadow  ·  Level 2 insets: --inset (0.97) */
+:root {
+  --bg: oklch(0.985 0 0);
+  --card: oklch(1 0 0);
+  --inset: oklch(0.97 0 0);
+  --ink: oklch(0 0 0);
+  --muted: oklch(0.44 0 0); /* 7:1 on white */
+  --line: oklch(0.92 0 0);
+  --line-strong: oklch(0.86 0 0);
+  --brand: oklch(0 0 0);
+  --brand-2: oklch(0.25 0 0);
+  --accent: oklch(0.94 0 0);
+  --ok: oklch(0.45 0.12 150);
+  --ok-bg: oklch(0.96 0.035 150);
+  --bad: oklch(0.5 0.19 25); /* text-safe red */
+  --bad-fill: oklch(0.63 0.19 23.03); /* theme destructive for marks/borders */
+  --bad-bg: oklch(0.96 0.03 25);
+  --warn: oklch(0.47 0.1 70);
+  --warn-bg: oklch(0.96 0.045 85);
+  --info: oklch(0.45 0.18 264);
+  --info-bg: oklch(0.96 0.025 264);
+  --gray-bg: oklch(0.94 0 0);
+  --radius: 0.5rem;
+  --shadow: 0 1px 2px oklch(0 0 0 / 0.18);
+  font-family: Geist, ui-sans-serif, system-ui, 'Noto Sans Bengali', 'Nirmala UI', sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+}
+body {
+  background: var(--bg);
+}
+:lang(bn) {
+  font-family: 'Noto Sans Bengali', Geist, 'Nirmala UI', sans-serif;
+}
+h1,
+h2,
+h3 {
+  font-family: inherit;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+/* Level 1 */
+.card,
+.topbar {
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.topbar {
+  border-width: 0 0 1px;
+}
+.stepper li,
+.files li {
+  background: var(--card);
+  border-color: var(--line);
+  box-shadow: var(--shadow);
+}
+/* Level 2 */
+.tender,
+.match th,
+.seal,
+.ai,
+.drop,
+.modal-body,
+.lang {
+  background: var(--inset);
+  border-color: var(--line);
+}
+.match th {
+  color: var(--muted);
+}
+.table-wrap {
+  border-color: var(--line);
+}
+.match td {
+  border-bottom-color: var(--line);
+}
+.logo,
+.num,
+.done .dot,
+.lang button.on,
+.btn.primary {
+  background: var(--brand);
+  color: oklch(1 0 0);
+  border-color: var(--brand);
+}
+.btn.primary:hover:not(:disabled) {
+  background: var(--brand-2);
+  border-color: var(--brand-2);
+}
+.lang button {
+  color: var(--ink);
+}
+.btn,
+.topbar .btn {
+  background: var(--card);
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+.btn:hover:not(:disabled),
+.topbar .btn:hover:not(:disabled) {
+  background: var(--inset);
+  border-color: oklch(0.8 0 0);
+}
+.btn.accent {
+  background: var(--accent);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+.btn.ghost {
+  color: var(--muted);
+}
+.btn.danger-ghost,
+.topbar .btn.danger-ghost {
+  color: var(--bad);
+}
+.btn:focus-visible,
+select:focus-visible,
+input:focus-visible,
+.drop:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.tagline,
+.help,
+.muted,
+.drop-sub,
+.privacy {
+  color: var(--muted);
+}
+.ord {
+  color: var(--ink);
+}
+.dot {
+  background: var(--gray-bg);
+  color: var(--ink);
+}
+.stepper li {
+  color: var(--muted);
+}
+.stepper li.done {
+  background: var(--card);
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.drop {
+  border-color: var(--line-strong);
+}
+.drop:hover,
+.drop.over {
+  border-color: var(--ink);
+  background: var(--card);
+}
+.ficon {
+  background: var(--gray-bg);
+  color: var(--ink);
+}
+.pill,
+.badge.muted-b,
+.tag-o {
+  background: var(--gray-bg);
+  color: oklch(0.3 0 0);
+}
+.tag-m {
+  background: var(--bad-bg);
+  color: var(--bad);
+}
+.tag-e,
+.badge.warn {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+.badge.soft,
+.badge.info {
+  background: var(--info-bg);
+  color: var(--info);
+}
+.badge.ok {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+.badge.bad {
+  background: var(--bad-bg);
+  color: var(--bad);
+}
+.hint,
+.ai summary,
+.link {
+  color: var(--info);
+}
+.files li.dup {
+  border-color: oklch(0.81 0.17 75.35);
+  background: var(--warn-bg);
+}
+.msg.error,
+.blockers {
+  background: var(--bad-bg);
+  border-color: var(--bad-fill);
+  color: var(--bad);
+}
+.msg.warn {
+  background: var(--warn-bg);
+  border-color: oklch(0.81 0.17 75.35);
+  color: var(--warn);
+}
+.msg.info {
+  background: var(--info-bg);
+  border-color: oklch(0.85 0.06 264);
+  color: var(--info);
+}
+.msg.success,
+.result {
+  background: var(--ok-bg);
+  border-color: oklch(0.8 0.08 150);
+  color: var(--ok);
+}
+.result {
+  color: var(--ink);
+}
+.st-ok,
+.count.st-ok {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+.st-ok .st-icon {
+  background: var(--ok);
+}
+.st-missing,
+.st-expired,
+.count.st-missing,
+.count.st-expired {
+  background: var(--bad-bg);
+  color: var(--bad);
+}
+.st-missing .st-icon,
+.st-expired .st-icon {
+  background: var(--bad);
+}
+.st-expiry_needed,
+.count.st-expiry_needed {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+.st-expiry_needed .st-icon {
+  background: var(--warn);
+}
+.st-not_provided,
+.count.st-not_provided {
+  background: var(--gray-bg);
+  color: oklch(0.35 0 0);
+}
+.st-not_provided .st-icon {
+  background: oklch(0.5 0 0);
+}
+.match tr.row-missing td:first-child,
+.match tr.row-expired td:first-child {
+  box-shadow: inset 3px 0 0 var(--bad-fill);
+}
+.match tr.row-expiry_needed td:first-child {
+  box-shadow: inset 3px 0 0 oklch(0.81 0.17 75.35);
+}
+.match tr.row-ok td:first-child {
+  box-shadow: inset 3px 0 0 var(--ok);
+}
+.match tr.row-not_provided td:first-child {
+  box-shadow: inset 3px 0 0 var(--line-strong);
+}
+select,
+input[type='date'],
+.pages-input,
+.ai-row input {
+  background: var(--card);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+}
+select.has,
+input[type='date'].good {
+  border-color: var(--ok);
+  background: var(--card);
+}
+input[type='date'].need {
+  border-color: oklch(0.81 0.17 75.35);
+  background: var(--card);
+}
+input[type='date'].bad {
+  border-color: var(--bad-fill);
+  background: var(--bad-bg);
+}
+.spinner {
+  border-top-color: var(--ink);
+}
+.check input,
+.radio input[type='radio'] {
+  accent-color: var(--ink);
+}
